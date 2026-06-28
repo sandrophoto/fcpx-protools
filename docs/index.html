@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FCPX vers Pro Tools — STUPIDS STUDIO</title>
+<meta name="description" content="Convertissez l'XML de Final Cut Pro en AAF pour Pro Tools. Rôles, transcodage, poignées, marqueurs, vidéo de référence. Par STUPIDS STUDIO." />
+<link rel="icon" href="icon.png" />
+<meta property="og:title" content="FCPX vers Pro Tools" />
+<meta property="og:description" content="Final Cut Pro → Pro Tools : préparation AAF audio, élégante et automatique." />
+<meta property="og:image" content="icon.png" />
+<style>
+:root{
+  --bg:#06060c; --bg2:#0b0b15; --txt:#ecedf6; --muted:#9b9cb5;
+  --g1:#2f6be6; --g2:#db2777; --g3:#f97316; --g4:#84cc16;
+  --glass:rgba(255,255,255,.045); --glass-bd:rgba(255,255,255,.09);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,system-ui,sans-serif;
+  background:var(--bg); color:var(--txt); overflow-x:hidden; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* ---------- Fond animé : mesh + orbes + grain ---------- */
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden;background:
+  radial-gradient(1200px 800px at 70% -10%, rgba(47,107,230,.18), transparent 60%),
+  radial-gradient(1000px 700px at 10% 20%, rgba(219,39,119,.14), transparent 55%),
+  radial-gradient(1100px 800px at 90% 90%, rgba(132,204,22,.12), transparent 55%),
+  linear-gradient(180deg,var(--bg),var(--bg2));}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;mix-blend-mode:screen;
+  animation:drift 22s ease-in-out infinite}
+.orb.a{width:520px;height:520px;background:var(--g1);top:-120px;left:-60px}
+.orb.b{width:460px;height:460px;background:var(--g2);top:30%;right:-100px;animation-delay:-6s}
+.orb.c{width:480px;height:480px;background:var(--g3);bottom:-140px;left:20%;animation-delay:-12s}
+.orb.d{width:400px;height:400px;background:var(--g4);top:55%;left:8%;animation-delay:-3s}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.08)}66%{transform:translate(-40px,50px) scale(.95)}}
+.spotlight{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(600px circle at var(--mx,50%) var(--my,30%), rgba(255,255,255,.06), transparent 45%);
+  transition:background .15s ease}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ---------- Nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);
+  background:rgba(8,8,15,.55);border-bottom:1px solid rgba(255,255,255,.06);
+  transition:background .3s,border-color .3s}
+nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
+nav .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+nav .logo svg{width:30px;height:30px;border-radius:8px}
+nav .sp{flex:1}
+nav .nlink{color:var(--muted);font-size:14px;font-weight:500;transition:color .2s;display:none}
+nav .nlink:hover{color:var(--txt)}
+@media(min-width:780px){nav .nlink{display:inline}}
+.btn{position:relative;display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;
+  font-weight:600;font-size:14px;padding:10px 18px;border-radius:12px;color:#fff;overflow:hidden;
+  background:linear-gradient(100deg,var(--g1),var(--g2),var(--g3));
+  background-size:200% 100%;transition:transform .2s,box-shadow .3s,background-position .6s;
+  box-shadow:0 8px 30px rgba(219,39,119,.35)}
+.btn:hover{transform:translateY(-2px);background-position:100% 0;box-shadow:0 12px 40px rgba(249,115,22,.45)}
+.btn .shine{position:absolute;top:0;left:-60%;width:40%;height:100%;
+  background:linear-gradient(110deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:skewX(-20deg);animation:shine 3.5s ease-in-out infinite}
+@keyframes shine{0%,100%{left:-60%}55%{left:130%}}
+.btn.ghost{background:var(--glass);border:1px solid var(--glass-bd);box-shadow:none;backdrop-filter:blur(8px)}
+.btn.ghost:hover{background:rgba(255,255,255,.09);box-shadow:none}
+
+/* ---------- Hero ---------- */
+header{position:relative;padding:150px 0 90px;text-align:center}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;
+  background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(8px);
+  font-size:13px;color:var(--muted);margin-bottom:30px}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--g4);box-shadow:0 0 10px var(--g4);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero-icon{width:130px;height:130px;margin:0 auto 26px;border-radius:30px;
+  filter:drop-shadow(0 20px 50px rgba(47,107,230,.45));animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14px) rotate(1.5deg)}}
+h1{font-size:clamp(40px,7vw,76px);font-weight:800;line-height:1.04;letter-spacing:-1.5px}
+h1 .grad{background:linear-gradient(100deg,var(--g1),var(--g2),var(--g3),var(--g4));
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:flow 8s ease infinite}
+@keyframes flow{0%,100%{background-position:0 0}50%{background-position:100% 0}}
+.sub{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:620px;margin:22px auto 36px}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.ver{margin-top:22px;font-size:13px;color:var(--muted)}
+
+/* ---------- Marquee techno ---------- */
+.marquee{overflow:hidden;margin:30px 0 10px;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.track{display:flex;gap:48px;width:max-content;animation:scrollx 24s linear infinite;opacity:.6}
+.track span{font-size:15px;font-weight:600;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:10px}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+
+/* ---------- Sections ---------- */
+section{padding:70px 0;position:relative}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--g2),var(--g3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.h2{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-.5px;margin:10px 0 14px}
+.lead{color:var(--muted);max-width:600px;font-size:17px}
+.center{text-align:center;margin:0 auto}
+
+/* ---------- Cartes features ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:46px}
+.card{position:relative;padding:26px;border-radius:18px;background:var(--glass);
+  border:1px solid var(--glass-bd);backdrop-filter:blur(10px);overflow:hidden;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s}
+.card::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;opacity:0;
+  background:linear-gradient(120deg,var(--g1),var(--g2),var(--g3),var(--g4));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;transition:opacity .35s}
+.card:hover{transform:translateY(-6px);box-shadow:0 22px 50px rgba(0,0,0,.5)}
+.card:hover::before{opacity:1}
+.card .ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:16px;
+  background:linear-gradient(135deg,rgba(47,107,230,.25),rgba(219,39,119,.25));border:1px solid var(--glass-bd)}
+.card h3{font-size:18px;font-weight:700;margin-bottom:7px}
+.card p{font-size:14.5px;color:var(--muted)}
+
+/* ---------- Workflow ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:46px;position:relative}
+.step{padding:24px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(8px)}
+.step .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;margin-bottom:14px;
+  background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 6px 20px rgba(219,39,119,.4)}
+.step h4{font-size:15.5px;margin-bottom:5px}
+.step p{font-size:13.5px;color:var(--muted)}
+
+/* ---------- CTA finale ---------- */
+.final{text-align:center;padding:90px 0}
+.final .box{position:relative;padding:64px 28px;border-radius:28px;overflow:hidden;
+  background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(12px)}
+.final .box::after{content:"";position:absolute;inset:-2px;z-index:-1;border-radius:30px;filter:blur(30px);opacity:.5;
+  background:linear-gradient(120deg,var(--g1),var(--g2),var(--g3),var(--g4))}
+
+/* ---------- Footer ---------- */
+footer{padding:46px 0;border-top:1px solid rgba(255,255,255,.06);color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+footer .studio{font-weight:800;font-family:ui-rounded,-apple-system;
+  background:linear-gradient(90deg,#ff1a33,#ffb400);-webkit-background-clip:text;background-clip:text;color:transparent}
+footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--txt)}
+
+/* ---------- Reveal au scroll ---------- */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- Logo SVG animé ---------- */
+.eqbar{transform-box:fill-box;transform-origin:center;animation:eq 1.4s ease-in-out infinite}
+@keyframes eq{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+</style>
+</head>
+<body>
+<div class="bg"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="orb d"></div></div>
+<div class="spotlight" id="spot"></div>
+<div class="grain"></div>
+
+<!-- SVG icône réutilisable (play + équaliseur animé) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="appicon" viewBox="0 0 100 100">
+  <defs><linearGradient id="fcp" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#2f6be6"/><stop offset=".4" stop-color="#db2777"/>
+    <stop offset=".7" stop-color="#f97316"/><stop offset="1" stop-color="#84cc16"/>
+  </linearGradient></defs>
+  <rect x="6" y="6" width="88" height="88" rx="22" fill="url(#fcp)"/>
+  <path d="M30 32 L30 68 L56 50 Z" fill="#fff"/>
+  <g fill="#fff">
+   <rect class="eqbar" x="60" y="38" width="4" height="24" rx="2" style="animation-delay:0s"/>
+   <rect class="eqbar" x="68" y="32" width="4" height="36" rx="2" style="animation-delay:.18s"/>
+   <rect class="eqbar" x="76" y="40" width="4" height="20" rx="2" style="animation-delay:.36s"/>
+   <rect class="eqbar" x="84" y="44" width="4" height="12" rx="2" style="animation-delay:.54s"/>
+  </g>
+ </symbol>
+</svg>
+
+<nav id="nav">
+ <div class="wrap">
+  <a class="logo" href="#top"><svg><use href="#appicon"/></svg> FCPX → Pro Tools</a>
+  <div class="sp"></div>
+  <a class="nlink" href="#features" style="margin-right:22px">Fonctions</a>
+  <a class="nlink" href="#workflow" style="margin-right:22px">Workflow</a>
+  <a class="nlink" href="https://github.com/sandrophoto/fcpx-protools" style="margin-right:22px">GitHub</a>
+  <a class="btn" href="https://github.com/sandrophoto/fcpx-protools/releases/latest"><span class="shine"></span>Télécharger</a>
+ </div>
+</nav>
+
+<header id="top">
+ <h2 class="sr-only">FCPX vers Pro Tools — convertisseur Final Cut Pro vers AAF</h2>
+ <div class="wrap">
+  <div class="chip"><span class="dot"></span> macOS · AAF pour Pro Tools · mises à jour auto</div>
+  <svg class="hero-icon"><use href="#appicon"/></svg>
+  <h1>De Final Cut Pro<br>à <span class="grad">Pro Tools</span></h1>
+  <p class="sub">Transforme l'XML de ton projet Final Cut en un <strong>AAF</strong> propre, prêt pour ton mixeur. Rôles, transcodage, poignées, marqueurs et vidéo de référence — en quelques clics.</p>
+  <div class="cta">
+   <a class="btn" href="https://github.com/sandrophoto/fcpx-protools/releases/latest"><span class="shine"></span>↓ Télécharger pour macOS</a>
+   <a class="btn ghost" href="https://github.com/sandrophoto/fcpx-protools">Voir sur GitHub</a>
+  </div>
+  <div class="ver">Version 1.1.2 · gratuit · macOS 13+</div>
+
+  <div class="marquee" aria-hidden="true"><div class="track" id="track">
+   <span>⏧ Moteur AAF · pyaaf2</span><span>◎ Transcodage · FFmpeg</span><span>◍ Interface · SwiftUI</span>
+   <span>↻ Mises à jour auto · Sparkle</span><span>✦ Aplatissement compounds</span><span>♪ Rôles → pistes</span>
+  </div></div>
+ </div>
+</header>
+
+<section id="features">
+ <div class="wrap">
+  <div class="center" style="max-width:640px">
+   <div class="eyebrow reveal">Tout ce qu'il faut</div>
+   <div class="h2 reveal d1">Pensée pour le montage son</div>
+   <p class="lead center reveal d2">Chaque détail qui compte pour un AAF que Pro Tools ouvre sans broncher.</p>
+  </div>
+  <div class="grid">
+   <div class="card reveal"><div class="ico">🎚️</div><h3>Rôles → pistes</h3><p>Chaque rôle audio devient une piste Pro Tools, nommée et ordonnée. Réordonne par glisser-déposer.</p></div>
+   <div class="card reveal d1"><div class="ico">🧩</div><h3>Compounds aplatis</h3><p>Les clips composés imbriqués sont résolus récursivement, à l'échantillon près.</p></div>
+   <div class="card reveal d2"><div class="ico">🌊</div><h3>16 / 24 / 32-bit</h3><p>Transcodage PCM via FFmpeg, conversion de sample-rate, sélection de canaux.</p></div>
+   <div class="card reveal d3"><div class="ico">✂️</div><h3>Poignées intelligentes</h3><p>Découpe à la portion utilisée + 1 à 4 s de poignées, bornées par la source.</p></div>
+   <div class="card reveal"><div class="ico">📦</div><h3>Embarqué ou référencé</h3><p>AAF autonome avec médias incorporés, ou léger avec WAV externes liés.</p></div>
+   <div class="card reveal d1"><div class="ico">🎬</div><h3>Vidéo de référence</h3><p>Ajoute ta vidéo guide comme piste image, alignée pour le mixeur.</p></div>
+   <div class="card reveal d2"><div class="ico">📍</div><h3>Marqueurs & fades</h3><p>Chapitres reportés en marqueurs, fades et clip-gain gravés ou ignorés.</p></div>
+   <div class="card reveal d3"><div class="ico">↻</div><h3>Mises à jour auto</h3><p>L'app se met à jour toute seule via GitHub. Toujours la dernière version.</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="workflow">
+ <div class="wrap">
+  <div class="center" style="max-width:640px">
+   <div class="eyebrow reveal">Simple comme bonjour</div>
+   <div class="h2 reveal d1">Cinq étapes, guidé</div>
+   <p class="lead center reveal d2">Un assistant qui révèle chaque étape au fur et à mesure. Impossible de se perdre.</p>
+  </div>
+  <div class="steps">
+   <div class="step reveal"><div class="n">1</div><h4>Le projet</h4><p>Glisse ton fichier .fcpxml.</p></div>
+   <div class="step reveal d1"><div class="n">2</div><h4>Destination</h4><p>Choisis où enregistrer l'AAF.</p></div>
+   <div class="step reveal d2"><div class="n">3</div><h4>Les rôles</h4><p>Coche et ordonne les pistes.</p></div>
+   <div class="step reveal d3"><div class="n">4</div><h4>Les médias</h4><p>Indique où sont les fichiers.</p></div>
+   <div class="step reveal d4"><div class="n">5</div><h4>Options & go</h4><p>Règle, puis lance la conversion.</p></div>
+  </div>
+ </div>
+</section>
+
+<section class="final">
+ <div class="wrap">
+  <div class="box reveal">
+   <div class="eyebrow">Prêt à mixer</div>
+   <div class="h2" style="margin-top:8px">Télécharge FCPX vers Pro Tools</div>
+   <p class="lead center" style="margin:0 auto 28px">Gratuit, pour macOS 13 et plus. Mises à jour automatiques incluses.</p>
+   <div class="cta">
+    <a class="btn" href="https://github.com/sandrophoto/fcpx-protools/releases/latest"><span class="shine"></span>↓ Télécharger maintenant</a>
+    <a class="btn ghost" href="https://github.com/sandrophoto/fcpx-protools/releases">Toutes les versions</a>
+   </div>
+  </div>
+ </div>
+</section>
+
+<footer>
+ <div class="wrap">
+  <div>Réalisé par <span class="studio">STUPIDS STUDIO</span> · © 2026 — Tous droits réservés.</div>
+  <div style="display:flex;gap:20px">
+   <a href="https://stupidstudio.eu">Site web</a>
+   <a href="https://github.com/sandrophoto/fcpx-protools">GitHub</a>
+   <a href="mailto:sandro@tigre.paris">Contact</a>
+  </div>
+ </div>
+</footer>
+
+<script>
+// Reveal au scroll
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// Spotlight + parallax orbes (souris)
+const spot=document.getElementById('spot'),orbs=document.querySelectorAll('.orb');
+addEventListener('pointermove',e=>{
+  const x=e.clientX/innerWidth,y=e.clientY/innerHeight;
+  spot.style.setProperty('--mx',e.clientX+'px');spot.style.setProperty('--my',e.clientY+'px');
+  orbs.forEach((o,i)=>{const d=(i+1)*14;o.style.transform=`translate(${(x-.5)*d}px,${(y-.5)*d}px)`});
+});
+// Nav opaque au scroll
+addEventListener('scroll',()=>{document.getElementById('nav').style.background=scrollY>40?'rgba(8,8,15,.8)':'rgba(8,8,15,.55)'});
+// Duplique le marquee pour une boucle continue
+const t=document.getElementById('track');t.innerHTML+=t.innerHTML;
+</script>
+</body>
+</html>
