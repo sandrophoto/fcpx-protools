@@ -127,6 +127,45 @@ nav .btn{padding:11px 16px}
 .ticker b::after{content:"";width:7px;height:7px;background:var(--app);flex:none}
 @keyframes scrollx{to{transform:translateX(-50%)}}
 
+/* ---------- L'APP ----------
+   Maquette de l'interface réelle : mêmes libellés, même déroulé (les étapes
+   validées se replient en lignes, seule l'étape en cours reste dépliée).
+   Rendue en aplats plutôt qu'en capture : pas de bordures, pas d'arrondis. */
+.shot{background:var(--paper-2);padding:0;overflow:hidden}
+.shot .bar{background:var(--ink);padding:11px 16px;display:flex;align-items:center;gap:8px}
+.shot .bar i{width:9px;height:9px;border-radius:50%;flex:none}
+.shot .bar i:nth-child(1){background:var(--red)}
+.shot .bar i:nth-child(2){background:var(--yellow)}
+.shot .bar i:nth-child(3){background:var(--app)}
+.shot .bar span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:#8f8f8f;margin-left:8px}
+.shot .body{padding:22px}
+/* étape repliée */
+.done{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--paper);margin-bottom:8px}
+.done .no{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--app);flex:none}
+.done .ttl{font-size:14px;font-weight:800;letter-spacing:-.01em}
+.done .sum{font-family:var(--mono);font-size:11px;color:#5a5a5a;margin-left:auto;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.done .ok{color:var(--app);font-weight:700;flex:none}
+/* étape en cours */
+.live{background:var(--white);padding:18px;margin-bottom:8px}
+.live-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.live-h .no{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--app)}
+.live-h h4{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.live-h .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--paper);
+  background:var(--app);padding:3px 8px}
+.role{display:flex;align-items:center;gap:12px;padding:9px 10px;background:var(--paper-2);margin-bottom:5px}
+.role .grip{font-family:var(--mono);font-size:11px;color:#8f8f8f;cursor:grab}
+.role .cb{width:14px;height:14px;background:var(--app);flex:none;display:grid;place-items:center;
+  font-size:9px;color:var(--paper);line-height:1}
+.role .cb.off{background:#c9c9c9}
+.role .nm{font-size:13.5px;font-weight:700}
+.role .meta{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:#5a5a5a}
+.hint{font-family:var(--mono);font-size:10.5px;color:#8f8f8f;margin-top:10px}
+.next{display:flex;justify-content:flex-end;margin-top:14px}
+.next span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--ink);color:var(--paper);padding:9px 16px}
+.veil{padding:12px 14px;font-family:var(--mono);font-size:11px;color:#a8a8a8;background:var(--paper)}
+
 /* ---------- SECTIONS ---------- */
 section{padding:74px 0}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;
@@ -200,6 +239,7 @@ footer .mail:hover{border-color:var(--app)}
         <span class="name">FCPX → Pro Tools</span>
       </a>
       <div class="nav-links">
+        <a href="#app">L'app</a>
         <a href="#features">Fonctions</a>
         <a href="#workflow">Workflow</a>
         <a href="https://github.com/sandrophoto/fcpx-protools">GitHub</a>
@@ -244,7 +284,37 @@ footer .mail:hover{border-color:var(--app)}
     <div class="track" id="track"><b>Moteur AAF · pyaaf2</b><b>Transcodage · FFmpeg</b><b>Interface · SwiftUI</b></div>
   </div>
 
-  <section id="features" class="wrap">
+  <section id="app" class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv">L'APP</p>
+      <p class="note rv">L'étape 3 sur 5, en cours.</p>
+    </div>
+    <h2 class="rv" style="margin-bottom:40px">Rien d'autre que<br>l'étape en cours.</h2>
+    <div class="shot rv">
+      <div class="bar"><i></i><i></i><i></i><span>FINAL CUT PRO → PRO TOOLS</span></div>
+      <div class="body">
+        <!-- les étapes validées se replient en lignes, comme dans l'app -->
+        <div class="done"><span class="no">01</span><span class="ttl">Projet Final Cut Pro</span><span class="sum">Montage_S02_V4.fcpxml</span><span class="ok">✓</span></div>
+        <div class="done"><span class="no">02</span><span class="ttl">Dossier de destination</span><span class="sum">~/Mixage/S02</span><span class="ok">✓</span></div>
+
+        <!-- seule l'étape en cours reste dépliée -->
+        <div class="live">
+          <div class="live-h"><span class="no">03</span><h4>Rôles audio à exporter</h4><span class="cnt">3/4</span></div>
+          <div class="role"><span class="grip">⣿</span><span class="cb">✓</span><span class="nm">Dialogue</span><span class="meta">42 clips</span></div>
+          <div class="role"><span class="grip">⣿</span><span class="cb">✓</span><span class="nm">Musique</span><span class="meta">8 clips</span></div>
+          <div class="role"><span class="grip">⣿</span><span class="cb">✓</span><span class="nm">Effets</span><span class="meta">27 clips</span></div>
+          <div class="role"><span class="grip">⣿</span><span class="cb off"></span><span class="nm">Ambiance</span><span class="meta">6 clips</span></div>
+          <p class="hint">Glissez pour réordonner les pistes</p>
+          <div class="next"><span>Continuer</span></div>
+        </div>
+
+        <!-- les étapes suivantes ne sont pas encore révélées -->
+        <div class="veil">04 · Emplacement des fichiers audio</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="wrap" style="padding-top:0">
     <div class="sec-head">
       <p class="eyebrow rv">TOUT CE QU'IL FAUT</p>
       <p class="note rv">Un AAF que Pro Tools ouvre sans broncher.</p>
