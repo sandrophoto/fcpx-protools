@@ -76,7 +76,7 @@ Publier une nouvelle version (mainteneur) :
 
 ## Crédits
 
-Réalisé par **STUPIDS STUDIO** — [stupidstudio.eu](https://stupidstudio.eu)
+Réalisé par **STUPIDS STUDIO** — [Le studio](https://sandrophoto.github.io/#studio)
 
 Propulsé par [pyaaf2](https://github.com/markreidvfx/pyaaf2), [FFmpeg](https://ffmpeg.org),
 [Sparkle](https://sparkle-project.org) et SwiftUI.
