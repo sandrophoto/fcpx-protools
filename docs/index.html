@@ -6,6 +6,7 @@
 <title>FCPX vers Pro Tools — STUPIDS STUDIO</title>
 <meta name="description" content="Convertissez l'XML de Final Cut Pro en AAF pour Pro Tools. Rôles, transcodage, poignées, marqueurs, vidéo de référence. Par STUPIDS STUDIO.">
 <link rel="icon" href="icon.png">
+<meta name="theme-color" content="#F2EFE6">
 <meta property="og:title" content="FCPX vers Pro Tools">
 <meta property="og:description" content="Final Cut Pro → Pro Tools : préparation AAF audio, élégante et automatique.">
 <meta property="og:image" content="icon.png">
@@ -16,24 +17,24 @@
 <style>
 :root{
   --paper:#F2EFE6;--paper-2:#E7E3D6;--ink:#121212;
-  --blue:#2340D4;--red:#E8412A;--yellow:#F7C51E;--white:#fff;
-  --bd:2px solid var(--ink);
+  --red:#E8412A;--yellow:#F7C51E;--blue:#2340D4;--white:#fff;
+  /* couleur de CETTE app, extraite de son icône */
+  --app:#EB5F80;--panel:#CC1A44;
   --sans:"Archivo","Helvetica Neue",Helvetica,-apple-system,BlinkMacSystemFont,Arial,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
   --ease:cubic-bezier(.2,.8,.2,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--ink);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+/* v2 : plus de cadre de page. Le papier va bord à bord. */
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-/* pas d'overflow:hidden ici — ça casserait le position:sticky de la nav */
-.frame{background:var(--paper);margin:10px;border:var(--bd)}
 .wrap{max-width:1180px;margin:0 auto;padding:0 32px;width:100%}
-.eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.16em}
+.eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--app)}
 
-/* ---------- NAV ---------- */
-nav{border-bottom:var(--bd);background:var(--paper);position:sticky;top:0;z-index:60}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px;gap:20px}
+/* ---------- NAV — un filet, pas une boîte ---------- */
+nav{border-bottom:2px solid var(--ink);background:var(--paper);position:sticky;top:0;z-index:60}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px;gap:20px}
 .logo{display:flex;align-items:center;gap:6px;flex:none}
 .logo .sq{width:22px;height:22px;background:var(--red);color:var(--white);font-family:var(--mono);
   font-size:10px;font-weight:700;display:grid;place-items:center}
@@ -49,124 +50,148 @@ nav{border-bottom:var(--bd);background:var(--paper);position:sticky;top:0;z-inde
 @media(min-width:900px){.nav-links{display:flex}}
 .nav-links a:not(.btn){font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.14em;
   position:relative;padding:4px 0}
-.nav-links a:not(.btn)::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--red);
+.nav-links a:not(.btn)::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--app);
   transition:width .28s var(--ease)}
 .nav-links a:not(.btn):hover::after{width:100%}
 
-/* ---------- BOUTONS ---------- */
+/* ---------- BOUTONS — un seul plein, le reste en liens soulignés ---------- */
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
-  text-transform:uppercase;letter-spacing:.1em;padding:13px 20px;border:var(--bd);
+  text-transform:uppercase;letter-spacing:.1em;padding:14px 22px;border:0;
   background:var(--ink);color:var(--paper);cursor:pointer;white-space:nowrap;
   transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
-.btn:hover{transform:translate(-3px,-3px);box-shadow:4px 4px 0 var(--red)}
+.btn:hover{transform:translate(-3px,-3px);box-shadow:4px 4px 0 var(--app)}
 .btn .ar{transition:transform .18s var(--ease)}
 .btn:hover .ar{transform:translateX(4px)}
-.btn.ghost{background:transparent;color:var(--ink)}
-.btn.ghost:hover{box-shadow:4px 4px 0 var(--blue)}
 nav .btn{padding:11px 16px}
+.lnk{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;
+  text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid var(--ink);padding-bottom:3px;
+  transition:color .2s,border-color .2s}
+.lnk:hover{color:var(--app);border-color:var(--app)}
 
 /* ---------- HERO ---------- */
-.hero{display:grid;grid-template-columns:1fr;border-bottom:var(--bd)}
-@media(min-width:900px){.hero{grid-template-columns:1.15fr .85fr}}
-.hero-l{padding:60px 32px 54px;max-width:660px;margin-left:auto;width:100%}
-@media(min-width:900px){.hero-l{padding:70px 48px 66px}}
-.hero h1{font-size:clamp(40px,5.6vw,72px);font-weight:900;line-height:.96;letter-spacing:-.035em;margin:22px 0 0}
-.hero .sub{margin-top:24px;font-size:16px;line-height:1.55;max-width:44ch;color:#2b2b2b}
-.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
-.ver{margin-top:20px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5a5a5a}
+.hero{display:grid;grid-template-columns:1fr}
+@media(min-width:900px){.hero{grid-template-columns:1.1fr .9fr}}
+.hero-l{padding:66px 32px 60px;max-width:680px;margin-left:auto;width:100%}
+@media(min-width:900px){.hero-l{padding:80px 52px 74px}}
+.hero h1{font-size:clamp(40px,5.4vw,74px);font-weight:900;line-height:.96;letter-spacing:-.035em;margin:24px 0 0}
+.hero .sub{margin-top:24px;font-size:16.5px;line-height:1.55;max-width:44ch;color:#2b2b2b}
+.cta{display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-top:34px}
+.ver{margin-top:22px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5a5a5a}
 
-.hero-r{background:var(--blue);position:relative;overflow:hidden;min-height:420px;border-left:var(--bd);
+/* panneau : aplat qui saigne, aucune bordure */
+.hero-r{background:var(--panel);position:relative;overflow:hidden;min-height:480px;
   display:grid;place-items:center}
-@media(max-width:899px){.hero-r{border-left:0;border-top:var(--bd);min-height:340px}}
-.hero-r .circle{position:absolute;top:-90px;right:-70px;width:280px;height:280px;border-radius:50%;
+@media(max-width:899px){.hero-r{min-height:400px}}
+.hero-r .circle{position:absolute;top:-110px;right:-80px;width:290px;height:290px;border-radius:50%;
   background:var(--yellow);animation:bob 9s ease-in-out infinite}
-/* centré : à gauche il chevaucherait la liste 01/02/03 */
-.hero-r .tri{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;
-  border-left:62px solid transparent;border-right:62px solid transparent;border-bottom:104px solid var(--red);
-  animation:slide 11s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(22px)}}
-@keyframes slide{50%{transform:translateX(-50%) translateY(-16px)}}
-.hero-r .icon{position:relative;z-index:2;width:132px;height:132px;border:var(--bd);background:var(--white);
-  display:grid;place-items:center;animation:bob2 7s ease-in-out infinite}
-.hero-r .icon img{width:100%;height:100%;object-fit:cover;display:block}
-@keyframes bob2{50%{transform:translateY(-12px)}}
+.par{transition:translate .5s var(--ease)}
+
+/* ---------- EFFET SIGNATURE : la timeline de rôles ----------
+   Ce que fait l'app, en une image : les rôles Final Cut deviennent des
+   pistes Pro Tools. Les clips se posent piste par piste, en boucle. */
+.tl{position:relative;z-index:2;width:min(400px,84%);background:var(--ink);padding:18px}
+.tl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.tl-head span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#8f8f8f}
+.tl-head .dot{width:7px;height:7px;background:var(--app);animation:blink 1.6s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.trk{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.trk .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--paper);width:74px;flex:none;opacity:.5;transition:opacity .3s}
+.trk.on .lbl{opacity:1}
+.trk .lane{flex:1;height:19px;background:#242424;position:relative;overflow:hidden}
+.trk .clip{position:absolute;top:0;height:100%;background:var(--app);
+  transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.trk.on .clip{transform:scaleX(1)}
+.trk:nth-child(3) .clip{background:var(--yellow)}
+.trk:nth-child(4) .clip{background:var(--paper)}
+.trk:nth-child(5) .clip{background:var(--blue)}
+/* l'équaliseur : l'audio qui vit */
+.eq{display:flex;align-items:flex-end;gap:3px;height:26px;margin-top:14px}
+.eq i{width:4px;background:var(--app);height:30%;animation:eq 1.1s ease-in-out infinite}
+@keyframes eq{50%{height:100%}}
+.tl-foot{display:flex;justify-content:space-between;margin-top:12px}
+.tl-foot span{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:#8f8f8f}
+.tl-foot b{color:var(--app);font-weight:400}
+
 .hero-r .rules{position:absolute;left:32px;bottom:26px;z-index:2}
 .hero-r .rules div{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--white);
   text-transform:uppercase;margin-bottom:7px}
+@media(max-width:560px){.hero-r .rules{display:none}}
+@keyframes bob{50%{transform:translateY(20px)}}
 
-/* ---------- BANDEAU ---------- */
-.strip{display:flex;border-bottom:var(--bd);background:var(--paper);overflow-x:auto;scrollbar-width:none}
-.strip::-webkit-scrollbar{display:none}
-.strip .cell{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
-  padding:16px 24px;border-right:var(--bd);white-space:nowrap;transition:background .4s var(--ease)}
-.strip .cell:last-child{border-right:0;flex:1}
-.strip .cell.on{background:var(--yellow)}
+/* ---------- TICKER — aplat plein ---------- */
+.ticker{background:var(--ink);color:var(--paper);overflow:hidden;padding:15px 0}
+.ticker .track{display:flex;width:max-content;animation:scrollx 32s linear infinite}
+.ticker b{font-family:var(--mono);font-size:11px;font-weight:400;text-transform:uppercase;
+  letter-spacing:.14em;white-space:nowrap;display:flex;align-items:center;gap:38px;padding-right:38px}
+.ticker b::after{content:"";width:7px;height:7px;background:var(--app);flex:none}
+@keyframes scrollx{to{transform:translateX(-50%)}}
 
 /* ---------- SECTIONS ---------- */
-section{padding:60px 0}
-.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:32px}
+section{padding:74px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;
+  border-top:2px solid var(--ink);padding-top:16px;margin-bottom:40px}
 .sec-head .note{font-family:var(--mono);font-size:12px;color:#3a3a3a;letter-spacing:.04em}
-h2{font-size:clamp(28px,4.2vw,50px);font-weight:900;line-height:.98;letter-spacing:-.03em}
+h2{font-size:clamp(30px,4.4vw,54px);font-weight:900;line-height:.98;letter-spacing:-.03em}
 .lead{font-size:16px;line-height:1.55;color:#3a3a3a;max-width:56ch;margin-top:12px}
 
-/* ---------- GRILLES (fond noir = filets de 2px) ---------- */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;
-  background:var(--ink);border:var(--bd)}
-.tile{background:var(--paper);padding:26px;position:relative;
-  transition:background .25s var(--ease),color .25s var(--ease)}
-.tile::before{content:"";position:absolute;left:0;top:0;height:100%;width:6px;background:var(--accent,var(--blue));
-  transform:scaleY(0);transform-origin:bottom;transition:transform .3s var(--ease)}
-.tile:hover::before{transform:scaleY(1)}
-.tile:hover{background:var(--ink);color:var(--paper)}
-.tile .ic{font-size:24px;margin-bottom:14px;display:block}
+/* ---------- TUILES — un filet en haut, pas de boîte ---------- */
+.tiles{display:grid;grid-template-columns:1fr;gap:0 44px}
+@media(min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+@media(min-width:1040px){.tiles{grid-template-columns:1fr 1fr 1fr 1fr}}
+.tile{padding:20px 0 28px;border-top:2px solid var(--ink)}
+.tile .ic{font-size:22px;display:block;margin-bottom:12px}
 .tile h3{font-size:17px;font-weight:800;letter-spacing:-.02em;margin-bottom:7px}
-.tile p{font-size:14px;line-height:1.5;color:#3a3a3a;transition:color .25s}
-.tile:hover p{color:#c9c9c9}
+.tile p{font-size:14px;line-height:1.5;color:#3a3a3a}
+.tile .bar{height:4px;width:0;background:var(--app);margin-top:14px;transition:width .35s var(--ease)}
+.tile:hover .bar{width:44px}
 
-/* ---------- ÉTAPES ---------- */
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:2px;
-  background:var(--ink);border:var(--bd)}
-.step{background:var(--paper);padding:26px;transition:background .25s var(--ease)}
-.step:hover{background:var(--yellow)}
-.step .n{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--red);margin-bottom:12px}
+/* ---------- ÉTAPES — gros chiffres, aucune carte ---------- */
+.steps{display:grid;grid-template-columns:1fr;gap:34px 44px}
+@media(min-width:600px){.steps{grid-template-columns:1fr 1fr}}
+@media(min-width:1000px){.steps{grid-template-columns:repeat(5,1fr)}}
+.step .n{font-family:var(--mono);font-size:40px;font-weight:700;color:var(--app);line-height:1;margin-bottom:12px}
 .step h4{font-size:16px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
 .step p{font-size:13.5px;line-height:1.5;color:#3a3a3a}
 
-/* ---------- CTA FINALE ---------- */
-.final{border:var(--bd);background:var(--yellow);padding:56px 32px;text-align:center;position:relative;overflow:hidden}
-.final .sq1{position:absolute;top:-30px;left:-30px;width:110px;height:110px;background:var(--blue);
-  animation:rot 18s linear infinite}
-.final .sq2{position:absolute;bottom:-36px;right:-20px;width:0;height:0;border-left:56px solid transparent;
-  border-right:56px solid transparent;border-bottom:92px solid var(--red);animation:bob 8s ease-in-out infinite}
-@keyframes rot{to{transform:rotate(360deg)}}
-.final h2{position:relative;z-index:2}
-.final .lead{position:relative;z-index:2;margin:14px auto 28px;color:#2b2b2b;text-align:center}
-.final .cta{position:relative;z-index:2;justify-content:center}
+/* ---------- BLOC FINAL — un aplat, pas un rectangle bordé ---------- */
+.slab{background:var(--app);padding:70px 32px;text-align:center;position:relative;overflow:hidden}
+.slab .sq1{position:absolute;top:-40px;left:-30px;width:120px;height:120px;background:var(--ink);
+  animation:spin 20s linear infinite}
+.slab .tri2{position:absolute;bottom:-30px;right:-10px;width:0;height:0;border-left:58px solid transparent;
+  border-right:58px solid transparent;border-bottom:96px solid var(--paper);opacity:.35;
+  animation:bob 8s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.slab h2,.slab .lead,.slab .cta{position:relative;z-index:2}
+.slab .lead{margin:14px auto 30px;color:var(--ink);text-align:center;opacity:.85}
+.slab .cta{justify-content:center}
+.slab .lnk{border-color:var(--ink)}
+.slab .lnk:hover{color:var(--paper);border-color:var(--paper)}
 
-/* ---------- FOOTER ---------- */
-footer{background:var(--ink);color:var(--paper);padding:56px 0 50px;margin-top:10px}
+/* ---------- FOOTER — aplat encre ---------- */
+footer{background:var(--ink);color:var(--paper);padding:66px 0 56px}
 .foot-in{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap}
-footer h2{font-size:clamp(28px,3.6vw,40px)}
-footer .mail{display:inline-block;margin-top:12px;color:var(--yellow);font-family:var(--mono);font-size:14px;
+footer h2{font-size:clamp(28px,3.6vw,42px)}
+footer .mail{display:inline-block;margin-top:12px;color:var(--app);font-family:var(--mono);font-size:14px;
   border-bottom:2px solid transparent;transition:border-color .22s}
-footer .mail:hover{border-color:var(--yellow)}
+footer .mail:hover{border-color:var(--app)}
 .foot-r{text-align:right;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
   color:#8f8f8f;line-height:1.9}
-.foot-r a{transition:color .2s}.foot-r a:hover{color:var(--yellow)}
+.foot-r a{transition:color .2s}.foot-r a:hover{color:var(--app)}
 
-/* ---------- RÉVÉLATION ----------
-   Amélioration progressive : l'état masqué n'existe que si JS est actif. */
+/* ---------- RÉVÉLATION ---------- */
 .js .rv{clip-path:inset(0 0 100% 0);transform:translateY(18px);
   transition:clip-path .7s var(--ease),transform .7s var(--ease)}
 .js .rv.in{clip-path:inset(0 0 0 0);transform:none}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .js .rv{clip-path:none;transform:none}
+  .trk .clip{transform:scaleX(1)}
+  .trk .lbl{opacity:1}
 }
 </style>
 </head>
 <body>
-<div class="frame">
 
   <nav>
     <div class="wrap nav-in">
@@ -185,19 +210,28 @@ footer .mail:hover{border-color:var(--yellow)}
 
   <div class="hero" id="top">
     <div class="hero-l">
-      <p class="eyebrow" style="color:var(--blue)">MACOS 13+ · AAF POUR PRO TOOLS · GRATUIT</p>
+      <p class="eyebrow">MACOS 13+ · AAF POUR PRO TOOLS · GRATUIT</p>
       <h1>De Final Cut<br>à Pro Tools.</h1>
       <p class="sub">Transforme l'XML de ton projet Final Cut en un <strong>AAF</strong> propre, prêt pour ton mixeur. Rôles, transcodage, poignées, marqueurs et vidéo de référence — en quelques clics.</p>
       <div class="cta">
         <a class="btn" href="https://github.com/sandrophoto/fcpx-protools/releases/latest">Télécharger <span class="ar">↓</span></a>
-        <a class="btn ghost" href="https://github.com/sandrophoto/fcpx-protools">Voir le code</a>
+        <a class="lnk" href="https://github.com/sandrophoto/fcpx-protools">Voir le code</a>
       </div>
       <p class="ver">Version 1.1.2 · macOS 13+ · mises à jour auto</p>
     </div>
-    <div class="hero-r">
-      <div class="circle"></div>
-      <div class="tri"></div>
-      <div class="icon"><img src="icon.png" alt="Icône de FCPX vers Pro Tools"></div>
+
+    <div class="hero-r" id="panel">
+      <div class="circle par" data-d="14"></div>
+      <!-- effet signature : les rôles Final Cut se posent en pistes Pro Tools -->
+      <div class="tl par" data-d="-8" id="tl" aria-hidden="true">
+        <div class="tl-head"><span>PROJET.FCPXML → MIXAGE.AAF</span><span class="dot"></span></div>
+        <div class="trk"><span class="lbl">Dialogue</span><div class="lane"><div class="clip" style="left:4%;width:44%"></div><div class="clip" style="left:56%;width:32%"></div></div></div>
+        <div class="trk"><span class="lbl">Musique</span><div class="lane"><div class="clip" style="left:0;width:72%"></div></div></div>
+        <div class="trk"><span class="lbl">Effets</span><div class="lane"><div class="clip" style="left:18%;width:22%"></div><div class="clip" style="left:48%;width:38%"></div></div></div>
+        <div class="trk"><span class="lbl">Ambiance</span><div class="lane"><div class="clip" style="left:6%;width:88%"></div></div></div>
+        <div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="tl-foot"><span>4 RÔLES → 4 PISTES</span><span><b>24-BIT · POIGNÉES 2S</b></span></div>
+      </div>
       <div class="rules">
         <div>01 / RÔLES → PISTES</div>
         <div>02 / POIGNÉES &amp; MARQUEURS</div>
@@ -206,63 +240,53 @@ footer .mail:hover{border-color:var(--yellow)}
     </div>
   </div>
 
-  <div class="strip" id="strip">
-    <div class="cell">MOTEUR AAF · PYAAF2</div>
-    <div class="cell">TRANSCODAGE · FFMPEG</div>
-    <div class="cell">INTERFACE · SWIFTUI</div>
-    <div class="cell">MISES À JOUR · SPARKLE</div>
-    <div class="cell">UNIVERSEL</div>
+  <div class="ticker" aria-hidden="true">
+    <div class="track" id="track"><b>Moteur AAF · pyaaf2</b><b>Transcodage · FFmpeg</b><b>Interface · SwiftUI</b></div>
   </div>
 
   <section id="features" class="wrap">
     <div class="sec-head">
-      <div>
-        <p class="eyebrow rv" style="color:var(--red)">TOUT CE QU'IL FAUT</p>
-        <h2 class="rv" style="margin-top:14px">Pensée pour<br>le montage son.</h2>
-      </div>
+      <p class="eyebrow rv">TOUT CE QU'IL FAUT</p>
       <p class="note rv">Un AAF que Pro Tools ouvre sans broncher.</p>
     </div>
-    <div class="tiles rv">
-      <div class="tile" style="--accent:var(--blue)"><span class="ic">🎚️</span><h3>Rôles → pistes</h3><p>Chaque rôle audio devient une piste Pro Tools, nommée et ordonnée. Réordonne par glisser-déposer.</p></div>
-      <div class="tile" style="--accent:var(--red)"><span class="ic">🧩</span><h3>Compounds aplatis</h3><p>Les clips composés imbriqués sont résolus récursivement, à l'échantillon près.</p></div>
-      <div class="tile" style="--accent:var(--yellow)"><span class="ic">🌊</span><h3>16 / 24 / 32-bit</h3><p>Transcodage PCM via FFmpeg, conversion de sample-rate, sélection de canaux.</p></div>
-      <div class="tile" style="--accent:var(--blue)"><span class="ic">✂️</span><h3>Poignées intelligentes</h3><p>Découpe à la portion utilisée + 1 à 4 s de poignées, bornées par la source.</p></div>
-      <div class="tile" style="--accent:var(--red)"><span class="ic">📦</span><h3>Embarqué ou référencé</h3><p>AAF autonome avec médias incorporés, ou léger avec WAV externes liés.</p></div>
-      <div class="tile" style="--accent:var(--yellow)"><span class="ic">🎬</span><h3>Vidéo de référence</h3><p>Ajoute ta vidéo guide comme piste image, alignée pour le mixeur.</p></div>
-      <div class="tile" style="--accent:var(--blue)"><span class="ic">📍</span><h3>Marqueurs &amp; fades</h3><p>Chapitres reportés en marqueurs, fades et clip-gain gravés ou ignorés.</p></div>
-      <div class="tile" style="--accent:var(--red)"><span class="ic">↻</span><h3>Mises à jour auto</h3><p>L'app se met à jour toute seule via GitHub. Toujours la dernière version.</p></div>
+    <h2 class="rv" style="margin-bottom:44px">Pensée pour<br>le montage son.</h2>
+    <div class="tiles">
+      <div class="tile rv"><span class="ic">🎚️</span><h3>Rôles → pistes</h3><p>Chaque rôle audio devient une piste Pro Tools, nommée et ordonnée. Réordonne par glisser-déposer.</p><div class="bar"></div></div>
+      <div class="tile rv"><span class="ic">🧩</span><h3>Compounds aplatis</h3><p>Les clips composés imbriqués sont résolus récursivement, à l'échantillon près.</p><div class="bar"></div></div>
+      <div class="tile rv"><span class="ic">🌊</span><h3>16 / 24 / 32-bit</h3><p>Transcodage PCM via FFmpeg, conversion de sample-rate, sélection de canaux.</p><div class="bar"></div></div>
+      <div class="tile rv"><span class="ic">✂️</span><h3>Poignées intelligentes</h3><p>Découpe à la portion utilisée + 1 à 4 s de poignées, bornées par la source.</p><div class="bar"></div></div>
+      <div class="tile rv"><span class="ic">📦</span><h3>Embarqué ou référencé</h3><p>AAF autonome avec médias incorporés, ou léger avec WAV externes liés.</p><div class="bar"></div></div>
+      <div class="tile rv"><span class="ic">🎬</span><h3>Vidéo de référence</h3><p>Ajoute ta vidéo guide comme piste image, alignée pour le mixeur.</p><div class="bar"></div></div>
+      <div class="tile rv"><span class="ic">📍</span><h3>Marqueurs &amp; fades</h3><p>Chapitres reportés en marqueurs, fades et clip-gain gravés ou ignorés.</p><div class="bar"></div></div>
+      <div class="tile rv"><span class="ic">↻</span><h3>Mises à jour auto</h3><p>L'app se met à jour toute seule via GitHub. Toujours la dernière version.</p><div class="bar"></div></div>
     </div>
   </section>
 
   <section id="workflow" class="wrap" style="padding-top:0">
     <div class="sec-head">
-      <div>
-        <p class="eyebrow rv" style="color:var(--blue)">SIMPLE COMME BONJOUR</p>
-        <h2 class="rv" style="margin-top:14px">Cinq étapes, guidé.</h2>
-      </div>
+      <p class="eyebrow rv">SIMPLE COMME BONJOUR</p>
       <p class="note rv">Un assistant qui révèle chaque étape au fur et à mesure.</p>
     </div>
-    <div class="steps rv">
-      <div class="step"><div class="n">01</div><h4>Le projet</h4><p>Glisse ton fichier .fcpxml.</p></div>
-      <div class="step"><div class="n">02</div><h4>Destination</h4><p>Choisis où enregistrer l'AAF.</p></div>
-      <div class="step"><div class="n">03</div><h4>Les rôles</h4><p>Coche et ordonne les pistes.</p></div>
-      <div class="step"><div class="n">04</div><h4>Les médias</h4><p>Indique où sont les fichiers.</p></div>
-      <div class="step"><div class="n">05</div><h4>Options &amp; go</h4><p>Règle, puis lance la conversion.</p></div>
+    <h2 class="rv" style="margin-bottom:44px">Cinq étapes, guidé.</h2>
+    <div class="steps">
+      <div class="step rv"><div class="n">01</div><h4>Le projet</h4><p>Glisse ton fichier .fcpxml.</p></div>
+      <div class="step rv"><div class="n">02</div><h4>Destination</h4><p>Choisis où enregistrer l'AAF.</p></div>
+      <div class="step rv"><div class="n">03</div><h4>Les rôles</h4><p>Coche et ordonne les pistes.</p></div>
+      <div class="step rv"><div class="n">04</div><h4>Les médias</h4><p>Indique où sont les fichiers.</p></div>
+      <div class="step rv"><div class="n">05</div><h4>Options &amp; go</h4><p>Règle, puis lance la conversion.</p></div>
     </div>
   </section>
 
-  <section class="wrap" style="padding-top:0">
-    <div class="final rv">
-      <div class="sq1"></div>
-      <div class="sq2"></div>
-      <h2>Prêt à mixer.</h2>
-      <p class="lead">Gratuit, pour macOS 13 et plus. Mises à jour automatiques incluses.</p>
-      <div class="cta">
-        <a class="btn" href="https://github.com/sandrophoto/fcpx-protools/releases/latest">Télécharger maintenant <span class="ar">↓</span></a>
-        <a class="btn ghost" href="https://github.com/sandrophoto/fcpx-protools/releases">Toutes les versions</a>
-      </div>
+  <div class="slab">
+    <div class="sq1"></div>
+    <div class="tri2"></div>
+    <h2>Prêt à mixer.</h2>
+    <p class="lead">Gratuit, pour macOS 13 et plus. Mises à jour automatiques incluses.</p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/sandrophoto/fcpx-protools/releases/latest">Télécharger maintenant <span class="ar">↓</span></a>
+      <a class="lnk" href="https://github.com/sandrophoto/fcpx-protools/releases">Toutes les versions</a>
     </div>
-  </section>
+  </div>
 
   <footer>
     <div class="wrap foot-in">
@@ -278,9 +302,12 @@ footer .mail:hover{border-color:var(--yellow)}
     </div>
   </footer>
 
-</div>
-
 <script>
+/* Ticker : dupliqué pour une boucle sans couture */
+const words=["Moteur AAF · pyaaf2","Transcodage · FFmpeg","Interface · SwiftUI",
+             "Mises à jour · Sparkle","Binaire universel","Aplatissement compounds","Rôles → pistes"];
+document.getElementById('track').innerHTML=words.map(w=>`<b>${w}</b>`).join('').repeat(2);
+
 /* Révélation au scroll — volet net, en cascade.
    Vérification directe au scroll/resize plutôt qu'IntersectionObserver :
    une poignée d'éléments, c'est gratuit, et ça ne peut pas laisser la
@@ -299,16 +326,38 @@ addEventListener('resize',reveal);
 addEventListener('load',reveal);
 requestAnimationFrame(reveal);
 
-/* Bandeau : la cellule jaune se déplace de cellule en cellule */
-const cells=[...document.querySelectorAll('#strip .cell')];
-let ci=0;
-function tickStrip(){
-  cells.forEach(c=>c.classList.remove('on'));
-  cells[ci].classList.add('on');
-  ci=(ci+1)%cells.length;
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* Effet signature : les pistes se montent une par une, puis on recommence */
+const trks=[...document.querySelectorAll('#tl .trk')];
+if(!reduce && trks.length){
+  let i=0;
+  setInterval(()=>{
+    if(i<trks.length){ trks[i].classList.add('on'); i++; }
+    else { trks.forEach(t=>t.classList.remove('on')); i=0; }
+  },700);
+  /* équaliseur : chaque barre son propre rythme */
+  document.querySelectorAll('#tl .eq i').forEach(b=>{
+    b.style.animationDelay=(-Math.random()*1.1).toFixed(2)+'s';
+    b.style.animationDuration=(.8+Math.random()*.7).toFixed(2)+'s';
+  });
 }
-tickStrip();
-if(!matchMedia('(prefers-reduced-motion:reduce)').matches) setInterval(tickStrip,2200);
+
+/* Parallaxe : les formes suivent le pointeur, chacune à sa profondeur */
+const panel=document.getElementById('panel');
+if(!reduce){
+  panel.addEventListener('pointermove',e=>{
+    const r=panel.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+    panel.querySelectorAll('.par').forEach(el=>{
+      const d=+el.dataset.d;
+      el.style.translate=`${x*d}px ${y*d}px`;
+    });
+  });
+  panel.addEventListener('pointerleave',()=>{
+    panel.querySelectorAll('.par').forEach(el=>el.style.translate='0px 0px');
+  });
+}
 </script>
 </body>
 </html>
